@@ -16,4 +16,20 @@ typedef struct {
     uint32_t sequence_number;
 } ADCsample;
 
+typedef struct {
+    double max_voltage;
+    double min_voltage;
+    double mean_voltage;
+    double std_dev_voltage;
+    double sample_count;
+} ChannelStats;
+
+ typedef struct {
+     int overvoltage_count;
+     int undervoltage_count;
+     int sensor_fault_count;
+     int total_fault_count;
+ } FaultStats;
+
+ void detects_faults(const ADCsample *samples, uint32_t count, uint8_t channel, FaultStats *out);
 #endif // ADC_H
