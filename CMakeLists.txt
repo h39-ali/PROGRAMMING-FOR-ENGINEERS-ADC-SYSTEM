@@ -12,3 +12,4 @@ add_executable(adc_sensor_processor
         io.c
         stats.c
         )
+target_link_libraries(adc_sensor_processor m)
