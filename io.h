@@ -31,8 +31,8 @@ typedef struct {
 #define FILE_MAGIC 0xADC1BEEFu
 
 int read_header(FILE *file, FileHeader *header);
-int read_records(FILE *file, RawRecord *records, uint32_t count);
-void raw_to_sample(const RawRecord *raw, ADCsample *sample);
+int read_data(FILE *file, RawRecord *records, uint32_t count);
+void voltage_conversion(const RawRecord *raw, ADCsample *sample);
 
 void write_results(const char *filename, ChannelStats channel_stats[4], FaultStats fault_Stats[4], IntegrityCheck integrity_stats[4]);
 
