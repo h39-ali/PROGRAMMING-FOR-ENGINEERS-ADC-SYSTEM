@@ -57,7 +57,7 @@ int read_data(FILE *file, RawRecord * records, uint32_t count) {
         sample->sequence_number = raw->sequence_number;
     }
 
-void write_results(const char *filename, ChannelStats channel_stats[4], FaultStats fault_stats[4],IntegrityCheck integrity_stats[4]) {
+void write_results(const char *filename, ChannelStats channel_stats[4], FaultStats fault_stats[4],IntegrityCheck integrity_stats) {
     FILE *out = fopen(filename, "w");
     if (out == NULL) {
         fprintf(stderr, "Error: Unable to open %s to write results\n", filename);
@@ -75,8 +75,8 @@ fprintf(out, "ADC RESULTS\n");
         fprintf(out, "Undervoltage: %d\n", fault_stats[ch].undervoltage_count);
         fprintf(out, "Sensor faults: %d\n", fault_stats[ch].sensor_fault_count);
         fprintf(out, "Total faults: %d\n", fault_stats[ch].total_fault_count);
-        fprintf(out, "Sequence gaps: %d\n", integrity_stats[ch].gap_count);
-        fprintf(out, "Total faults: %d\n", integrity_stats[ch].out_of_order_count);
+        fprintf(out, "Sequence gaps: %d\n", integrity_stats.gap_count);
+        fprintf(out, "Total faults: %d\n", integrity_stats.out_of_order_count);
     }
 fclose(out);
     printf("Results successfully written to %s\n", filename);

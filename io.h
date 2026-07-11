@@ -34,6 +34,6 @@ int read_header(FILE *file, FileHeader *header);
 int read_data(FILE *file, RawRecord *records, uint32_t count);
 void voltage_conversion(const RawRecord *raw, ADCsample *sample);
 
-void write_results(const char *filename, ChannelStats channel_stats[4], FaultStats fault_Stats[4], IntegrityCheck integrity_stats[4]);
+void write_results(const char *filename, ChannelStats channel_stats[4], FaultStats fault_stats[4], IntegrityCheck integrity_stats);
 
 #endif //IO_H

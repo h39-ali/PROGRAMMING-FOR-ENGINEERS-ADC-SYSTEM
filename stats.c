@@ -15,19 +15,21 @@ double calc_mean(const double *values, int count) {
 double calc_min(const double *values, int count) {
     double min = values[0];
     for (int i = 1; i < count; i++) {
-        if (values[1] < min) {
+        if (values[i] < min) {
             min = values[i];
         }
     }
     return min;
+}
     double calc_max(const double *values, int count) {
         double max = values[0];
         for (int i = 1; i < count; i++) {
-            if (values[1] > max) {
-                min = values[i];
+            if (values[i] > max) {
+                max = values[i];
             }
         }
         return max;
+    }
         double calc_std_dev(const double *values, int count, double mean) {
             double sum_squared_diff = 0.0;
             for (int i = 0; i < count; i++) {

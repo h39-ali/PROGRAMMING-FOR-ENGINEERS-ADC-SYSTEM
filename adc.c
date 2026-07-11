@@ -8,7 +8,7 @@
 
 void calc_channel_stats(const ADCsample *samples, uint32_t count, uint8_t channel, ChannelStats *out) {
 int n = 0;
-
+double *voltages = malloc(count * sizeof(double));
 for (uint32_t i = 0; i < count; i++) {
     if (samples[i].channel_id == channel) {
         voltages[n] = samples[i].voltage;
@@ -27,7 +27,7 @@ return;
 out->max_voltage = calc_max(voltages, n);
 out->min_voltage = calc_min(voltages, n);
 out->mean_voltage = calc_mean(voltages, n);
-out->std_dev_voltage = calc_std_dev(voltages, n);
+out->std_dev_voltage = calc_std_dev(voltages, n, out->mean_voltage);
 out->sample_count = n;
 free(voltages);
 }
@@ -37,7 +37,7 @@ void detect_faults(const ADCsample *samples, uint32_t count, uint8_t channel, Fa
     out->sensor_fault_count = 0;
     out->total_fault_count = 0;
 
-    for(uint32_t i = 0; i < count; i++) {
+    for (uint32_t i = 0; i < count; i++) {
         if (samples[i].channel_id != channel) {
             continue;
         }
@@ -47,16 +47,39 @@ void detect_faults(const ADCsample *samples, uint32_t count, uint8_t channel, Fa
             out->overvoltage_count++;
             faulty = 1;
         }
-        if (samples[i].voltage > 0.3f) {
+        if (samples[i].voltage < 0.3f) {
             out->undervoltage_count++;
             faulty = 1;
         }
-            if (samples[i].status_flags & 0x01) {
-                out->sensor_fault_count++;
-                faulty = 1;
-    }
-            if (faulty) {
-            out-> total_fault_count++;
-            }
+        if (samples[i].status_flags & 0x01) {
+            out->sensor_fault_count++;
+            faulty = 1;
+        }
+        if (faulty) {
+            out->total_fault_count++;
+        }
     }
 }
+    void check_integrity(const ADCsample *samples, uint32_t count, IntegrityCheck *out) {
+        out->gap_count = 0;
+        out->out_of_order_count = 0;
+
+        int have_previous = 0;
+        uint32_t previous_seq = 0;
+
+        for (uint32_t i = 0; i < count; i++) {
+
+            uint32_t current_seq = samples[i].sequence_number;
+
+            if (have_previous) {
+                if (current_seq < previous_seq) {
+                    out->out_of_order_count++;
+                } else if (current_seq > previous_seq + 1) {
+                    out->gap_count++;
+                }
+            }
+
+            previous_seq = current_seq;
+            have_previous = 1;
+        }
+    }

@@ -36,7 +36,7 @@ void calc_channel_stats(const ADCsample *samples, uint32_t count, uint8_t channe
      int gap_count;
      int out_of_order_count;
  } IntegrityCheck;
- void check_integrity(const ADCsample *samples, uint32_t count, uint8_t channel, IntegrityCheck *out);
+ void check_integrity(const ADCsample *samples, uint32_t count, IntegrityCheck *out);
 
 
 #endif // ADC_H
