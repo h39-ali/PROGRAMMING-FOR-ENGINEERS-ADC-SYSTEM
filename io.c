@@ -38,12 +38,13 @@ int read_data(FILE *file, RawRecord * records, uint32_t count) {
         success &= fread(&records[i].status_flags, sizeof(records[i].status_flags), 1, file);
         success &= fread(&records[i].sequence_number, sizeof(records[i].sequence_number), 1, file);
         success &= fread(&records[i].reserved, sizeof(records[i].reserved), 1, file);
-if (!success) {
-    fprintf(stderr, "Error: Unable to read record\n");
-    return 0;
-}
+        if (!success) {
+            fprintf(stderr, "Error: Unable to read record\n");
+            return 0;
+        }
     }
-return 1;
+    return 1;
+}
     void voltage_conversion(const RawRecord *raw, ADCsample *sample) {
         const float VREF = 3.3f;
 
@@ -55,7 +56,7 @@ return 1;
         sample->status_flags = raw->status_flags;
         sample->sequence_number = raw->sequence_number;
     }
-}
+
 void write_results(const char *filename, ChannelStats channel_stats[4], FaultStats fault_stats[4],IntegrityCheck integrity_stats[4]) {
     FILE *out = fopen(filename, "w");
     if (out == NULL) {
